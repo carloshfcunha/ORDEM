@@ -1,0 +1,51 @@
+\<< 'L' PURGE
+'VF' PURGE
+"Matriz com valores de t e Xa" {{"M=" "t na col. 1 e Xa na col. 2"}} {1 0} {} {} INFORM 'VF' STO
+ IF 'VF==0'
+ THEN
+  HALT
+ END
+'L' STO
+'L(1)' EVAL 'M' STO
+"Insira os valores de iteração" {{"Inicial=" "Chute inicial"} {"Final=" "Chute final"} {"Variação=" "Variação do chute inicial ao final"}} {1 0} {} {} INFORM 'VF' STO
+ IF 'VF==0'
+ THEN
+  HALT
+ END
+'L' STO
+'L(1)' EVAL 'n' STO
+'L(2)' EVAL 'V' STO
+'L(3)' EVAL 'Q' STO
+M \->ROW 'N' STO CLEAR 
+'\GS(I=1.,N,M(I,1.))' EVAL 'B' STO 
+'\GS(I=1.,N,M(I,1.)^2.)' EVAL 'D' STO
+0 'R21' STO
+ WHILE n V \<=
+ REPEAT
+   IF n 1. ==
+   THEN 
+    '\GS(I=1.,N,LN(1.-M(I,2.)))' EVAL 'C' STO 
+    '\GS(I=1.,N,LN(1.-M(I,2.))*M(I,1.))' EVAL 'A' STO 
+    '\GS(I=1.,N,LN(1.-M(I,2.))^2.)' EVAL 'E' STO
+   END
+   IF n 1. \=/
+   THEN 
+    '\GS(I=1.,N,(1.-M(I,2.))^(1.-n)*M(I,1.))' EVAL 'A' STO 
+    '\GS(I=1.,N,(1.-M(I,2.))^(1.-n))' EVAL 'C' STO 
+    '\GS(I=1.,N,((1.-M(I,2.))^(1.-n))^2.)' EVAL 'E' STO
+   END 
+  '(A-B*C/N)^2./((D-B^2./N)*(E-C^2./N))' EVAL 'R2' STO 
+  'n' n = 
+  'Q+n' EVAL 'n' STO 
+  'Correlação' R2 =
+   IF 'R2>R21'
+   THEN
+    'n-Q' EVAL 'nF' STO
+    R2 'R2F' STO
+   END
+  R2 'R21' STO
+ END
+"O melhor valor para n é:"
+'n' nF =
+'Correlação' R2F =
+\>>
